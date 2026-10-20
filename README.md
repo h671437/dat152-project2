@@ -74,7 +74,9 @@ For this task, you will require the Keycloak Identity Provider server.
 You will then receive a response with the access_token. 
 - Copy the access\_token and replace the `admin.token.test` , `user.token.test` , `user3.token.test`, `user4.token.test` in the `application.properties` with these new values. When they expire, you need to request for new tokens and replace the old ones.
 - Copy your solutions from Tasks 1 & 2 and secure the endpoints by using @PreAuthorize annotation.
-- All /authors, /books, and /order endpoints can only be accessed by ADMIN user role
+- All POST and PUT requests to /authors and /books endpoints can only be accessed by ADMIN role
+- GET requests to /orders endpoint should only be accessible by ADMIN role
+- POST, PUT, and DELETE requests to /orders/{id} should be accessible to ADMIN and USER roles.
 - All /users/{id} endpoints must be accessible only to the correct authenticated user or an admin user. For example, user1 (id=1) can only access /users/1 but not /users/2. An admin role must be able to access all the endpoints. Only admin role can access /users endpoint.
 - Test your solutions.
 
