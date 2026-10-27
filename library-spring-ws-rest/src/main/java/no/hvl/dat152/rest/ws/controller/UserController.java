@@ -58,18 +58,67 @@ public class UserController {
 	}
 	
 	// TODO - createUser (@Mappings, URI=/users, and method)
+	@PostMapping("/users")
+	public ResponseEntity<Object> createUser(@RequestBody User user){
+
+		return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+	}
 
 	// TODO - updateUser (@Mappings, URI, and method)
+	@PutMapping("/users/{id}")
+	public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) throws UserNotFoundException {
+
+		return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
+	}
 	
 	// TODO - deleteUser (@Mappings, URI, and method)
+	@DeleteMapping("/users/{id}")
+	public ResponseEntity<Object> deleteUser(@PathVariable Long id) throws UserNotFoundException {
+
+		userService.deleteUser(id);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 	// TODO - getUserOrders (@Mappings, URI=/users/{id}/orders, and method)
+	@GetMapping("/users/{id}/orders")
+	public ResponseEntity<Object> getUserOrders(@PathVariable Long id) throws UserNotFoundException {
+
+		return new ResponseEntity<>(userService.getUserOrders(id), HttpStatus.OK);
+	}
 	
 	// TODO - getUserOrder (@Mappings, URI=/users/{uid}/orders/{oid}, and method)
+	@GetMapping("/users/{uid}/orders/{oid}")
+	public ResponseEntity<Object> getUserOrder(@PathVariable Long uid, @PathVariable Long oid) throws UserNotFoundException, OrderNotFoundException {
+
+		return new ResponseEntity<>(userService.getUserOrder(uid, oid), HttpStatus.OK);
+	}
 
 	// TODO - deleteUserOrder (@Mappings, URI, and method)
+	@DeleteMapping("/users/{uid}/orders/{oid}")
+	public ResponseEntity<Object> deleteUserOrder(@PathVariable Long uid, @PathVariable Long oid) throws UserNotFoundException, OrderNotFoundException {
+
+		userService.deleteOrderForUser(uid, oid);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 	// TODO - createUserOrder (@Mappings, URI, and method) + HATEOAS links
+	@PostMapping("/users/{id}/orders")
+	public ResponseEntity<Object> createUserOrder(@PathVariable Long id, @RequestBody Order order) throws UserNotFoundException, OrderNotFoundException {
+
+		User user = userService.createOrdersForUser(id, order);
+
+		// links for every order of the user, the new order included
+		for(Order o : user.getOrders()) {
+			o.add(linkTo(methodOn(OrderController.class).getBorrowOrder(o.getId())).withSelfRel());
+			o.add(linkTo(methodOn(UserController.class).getUserOrder(id, o.getId())).withRel("user-order"));
+			o.add(linkTo(methodOn(UserController.class).getUserOrders(id)).withRel("user-orders"));
+			o.add(linkTo(methodOn(UserController.class).deleteUserOrder(id, o.getId())).withRel("cancel-order"));
+		}
+
+		return new ResponseEntity<>(user.getOrders(), HttpStatus.CREATED);
+	}
 
 	
 }

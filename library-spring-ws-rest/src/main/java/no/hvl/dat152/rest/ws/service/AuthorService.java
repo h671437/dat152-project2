@@ -34,19 +34,41 @@ public class AuthorService {
 	
 	// TODO public saveAuthor(Author author)
 	public Author saveAuthor(Author author) {
-		
-		return null;
-	}
-		
-	
-	// TODO public Author updateAuthor(Author author, int id)
-		
-	
-	// TODO public List<Author> findAll()
-	
-	
-	// TODO public void deleteById(int id) throws AuthorNotFoundException 
 
-	
+		return authorRepository.save(author);
+	}
+
+
+	// TODO public Author updateAuthor(Author author, int id)
+	public Author updateAuthor(Author author, int id) throws AuthorNotFoundException {
+
+		Author existing = findById(id);
+		existing.setFirstname(author.getFirstname());
+		existing.setLastname(author.getLastname());
+
+		return authorRepository.save(existing);
+	}
+
+
+	// TODO public List<Author> findAll()
+	public List<Author> findAll() {
+
+		return (List<Author>) authorRepository.findAll();
+	}
+
+
+	// TODO public void deleteById(int id) throws AuthorNotFoundException
+	public void deleteById(int id) throws AuthorNotFoundException {
+
+		Author author = findById(id);
+
+		authorRepository.delete(author);
+	}
+
+
 	// TODO public Set<Book> findBooksByAuthorId(int id)
+	public Set<Book> findBooksByAuthorId(int id) throws AuthorNotFoundException {
+
+		return findById(id).getBooks();
+	}
 }

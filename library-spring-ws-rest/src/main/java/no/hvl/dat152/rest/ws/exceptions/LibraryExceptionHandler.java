@@ -56,9 +56,9 @@ public class LibraryExceptionHandler {
 	@ExceptionHandler(value = OrderNotFoundException.class)
 	public ResponseEntity<String> orderFailed(OrderNotFoundException ex) {
 		
-		return new ResponseEntity<>("An error occured: " + ex.getMessage(), HttpStatus.NOT_MODIFIED);
+		return new ResponseEntity<>("An error occured: " + ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
-	
+
 	/**
 	 * Specific error message for update
 	 * @param ex
@@ -66,8 +66,8 @@ public class LibraryExceptionHandler {
 	 */
 	@ExceptionHandler(value = UserNotFoundException.class)
 	public ResponseEntity<String> userFailed(UserNotFoundException ex) {
-		
-		return new ResponseEntity<>("An error occured: " + ex.getMessage(), HttpStatus.NOT_MODIFIED);
+
+		return new ResponseEntity<>("An error occured: " + ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	/**
